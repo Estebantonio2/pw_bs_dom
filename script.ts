@@ -41,10 +41,41 @@ class TicTacToc {
 
     private handleMove = (index: number) => {
         // console.log(`Se hizo click en la celda ${index}`);
+
+        if (this.board[index]) return;
+
         this.board[index] = this.currentPlayer;
         this.renderBoard();
-        this.currentPlayer = this.currentPlayer === "X" ? "O" : "X";
-        this.status.textContent = `Turno: ${this.currentPlayer}`;
+
+        if (this.checkWinner()) {
+            this.status.textContent = `Ganador: ${this.currentPlayer}`
+            this.isGameOver = true;
+        } else if (this.board.every((cell) => cell)) {
+            this.status.textContent = "Empate"
+        } else {
+            this.currentPlayer = this.currentPlayer === "X" ? "O" : "X";
+            this.status.textContent = `Turno: ${this.currentPlayer}`;
+        }
+    }
+
+    private checkWinner = () => {
+        const winningCombs = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 4, 8],
+            [1, 4, 7],
+            [2, 4, 6],
+            [0, 3, 6],
+            [2, 5, 8]
+        ]
+        for (let i = 0; i < winningCombs.length; i++) {
+            const [a ,b, c] = winningCombs[i];
+            if (this.board[a] && this.board[a] === this.board[b] && this.board[a] === this.board[c]) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
